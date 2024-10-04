@@ -27,10 +27,10 @@ function App() {
 }
 
 const Root = () => {
-  return <>
+  return <div className="bg-lightGreen">
     <Navbar />
     <Outlet />
-  </>
+  </div>
 }
 
 export default App

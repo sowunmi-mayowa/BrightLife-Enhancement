@@ -21,7 +21,16 @@ export default {
         primaryGreen: "#77BC3F",
         primaryGray: "#ABABAB",
         lightGreen: "#F7FEF1"
-      }
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 15s linear infinite',
+      },
     },
   },
   plugins: [],

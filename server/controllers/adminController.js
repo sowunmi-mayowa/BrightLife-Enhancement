@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const Admin = require("../model/adminModel");
 const jwt = require("jsonwebtoken");
 const e = require("express");
+const crrypto = require("crypto");
 
 const adminRegister = async(req, res) => {
     const {email, password} = req.body;
@@ -44,7 +45,29 @@ const adminLogin = async(req, res) => {
     }
 }
 
+const resetPassword = async (req, res) => {
+    const { email, newPassword } = req.body;
+
+    try {
+        const admin = await Admin.findOne({ email });
+        if (!admin) return res.status(400).json({ error: "Admin not found" });
+
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update password
+        admin.password = hashedPassword;
+        await admin.save();
+
+        res.json({ message: "Password reset successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     adminRegister,
-    adminLogin
+    adminLogin,
+    resetPassword
 }

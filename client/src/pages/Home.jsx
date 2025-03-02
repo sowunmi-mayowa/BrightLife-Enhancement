@@ -4,6 +4,8 @@ import HeroImgMobile from "../assets/hero-mobile.png"
 import HomeImg1 from "../assets/home-img1.png"
 import HomeImg2 from "../assets/home-img2.png"
 import slideImg1 from "../assets/carouselImg1.png"
+import slideImg2 from "../assets/carouselImg2.png"
+import slideImg3 from "../assets/carouselImg3.png"
 import medical from "../assets/medical.png"
 import carf from "../assets/carf.png"
 import logoWhite from "../assets/logo-white.svg"
@@ -161,11 +163,17 @@ const Home = () => {
                 <LazyLoad image={slideImg1} alt={"carousel images"} />
                 <h1 className="absolute inset-x-0 bottom-[6px] rounded-b-3xl mx-auto bg-gradient-to-t from-primaryGreen to-transparent text-lg font-bold text-white w-[98.5%] text-center p-4">Treatment Programs</h1>
               </div>
-                <LazyLoad image={slideImg1} alt={"carousel images"} />
-                <LazyLoad image={slideImg1} alt={"carousel images"} />
+              <div className="relative">
+                <LazyLoad image={slideImg2} alt={"carousel images"} />
+                <h1 className="absolute inset-x-0 bottom-[6px] rounded-b-3xl mx-auto bg-gradient-to-t from-primaryGreen to-transparent text-lg font-bold text-white w-[98.5%] text-center p-4">OMHC</h1>
+              </div>
+              <div className="relative">
+                <LazyLoad image={slideImg3} alt={"carousel images"} />
+                <h1 className="absolute inset-x-0 bottom-[6px] rounded-b-3xl mx-auto bg-gradient-to-t from-primaryGreen to-transparent text-lg font-bold text-white w-[98.5%] text-center p-4">Holistic Approach</h1>
+              </div>
             </Slider>
         </div>
-        <div className='lg:hidden my-4'>
+        <div className='lg:hidden my-4 slider-container'>
             <Slider {...mobileSettings}>
                 <LazyLoad image={slideImg1} alt={"carousel images"}/>
                 <LazyLoad image={slideImg1} alt={"carousel images"} />

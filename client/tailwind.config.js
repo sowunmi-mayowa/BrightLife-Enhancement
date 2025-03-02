@@ -18,7 +18,7 @@ export default {
         lato: ["Lato", "sans-serif"]
       },
       colors: {
-        primaryGreen: "#77BC3F",
+        primaryGreen: "#10a500",
         primaryGray: "#ABABAB",
         lightGreen: "#F7FEF1"
       },

@@ -5,27 +5,36 @@ const jwt = require("jsonwebtoken");
 const e = require("express");
 const crrypto = require("crypto");
 
-const adminRegister = async(req, res) => {
-    const {email, password} = req.body;
+const adminRegister = async (req, res) => {
+    const { email, password } = req.body;
 
-    try{
+    try {
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required" });
+        }
+
+        // Check if admin already exists
+        const existingAdmin = await Admin.findOne({ email });
+        if (existingAdmin) {
+            return res.status(400).json({ error: "Admin already exists" });
+        }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const admin = new Admin({
             email,
-            password: hashedPassword
-        })
+            password: hashedPassword,
+        });
 
         await admin.save();
-        res.status(201).json({message: "admin registered successfuly"});
+        res.status(201).json({ message: "Admin registered successfully" });
         
+    } catch (error) {
+        console.error("Admin registration error:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    catch(error){
-        res.status(500).json({error: error.message});
-    }
-}
-
+};
 const adminLogin = async(req, res) => {
     const {email, password} = req.body;
 

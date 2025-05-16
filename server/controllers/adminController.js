@@ -28,7 +28,12 @@ const adminRegister = async (req, res) => {
         });
 
         await admin.save();
-        res.status(201).json({ message: "Admin registered successfully" });
+        
+        const token = jwt.sign({_id: admin._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        res.status(201).json({ 
+            message: "Admin registered successfully",
+            token 
+        });
         
     } catch (error) {
         console.error("Admin registration error:", error.message);

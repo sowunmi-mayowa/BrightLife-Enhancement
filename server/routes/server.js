@@ -4,7 +4,7 @@ const { adminRegister, adminLogin, resetPassword } = require("../controllers/adm
 const authMiddleware = require("../middleare/authMiddleware");
 const { createContact, getContacts } = require("../controllers/contactController");
 const { getUsers, addUser, searchByJobRole, searchByName } = require("../controllers/userController");
-const { getEmployee, getAllEmployees } = require("../controllers/employeeController");
+const { getEmployee, getAllEmployees, addEmployee, employeeLogin } = require("../controllers/employeeController");
 
 const router = express.Router();
 
@@ -23,5 +23,7 @@ router.get('/users/search/name', searchByName);
 router.get('/users/search/job', searchByJobRole);
 router.get('/employee/search', getEmployee);
 router.get('/employees', getAllEmployees);
+router.post('/employee/addEmployee', addEmployee);
+router.post('/employee/login', employeeLogin);
 
 module.exports = router

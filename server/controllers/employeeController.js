@@ -1,4 +1,5 @@
 const Employee = require('../model/employeeModel');
+const jwt = require("jsonwebtoken");
 
 const getAllEmployees = async (req, res) => {
     try {
@@ -42,7 +43,98 @@ const getEmployee = async (req, res) => {
     }
 };
 
+const addEmployee = async (req, res) => {
+    const { name, email, jobRole, startDate } = req.body;
+
+    try {
+        // Validate required fields
+        if (!name || !email || !jobRole) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        // Find the employee with the highest employeeId
+        const lastEmployee = await Employee.findOne({})
+            .sort('-employeeId')
+            .select('employeeId');
+        
+        // Calculate new employeeId (increment by 1 from the last one, or start with 1 if no employees exist)
+        let newEmployeeNumber;
+        if (lastEmployee) {
+            // Extract the numeric part from the employeeId (e.g., "016" from "EMP016")
+            const lastNumber = parseInt(lastEmployee.employeeId.replace(/\D/g, ''));
+            newEmployeeNumber = lastNumber + 1;
+        } else {
+            newEmployeeNumber = 1;
+        }
+
+        const existingEmployee = await Employee.findOne({ email });
+        if (existingEmployee) {
+            return res.status(400).json({ error: "Employee with this email already exists" });
+        }
+        
+        // Format the new employeeId with leading zeros and EMP prefix
+        const newEmployeeId = `EMP${String(newEmployeeNumber).padStart(3, '0')}`;
+
+        // Create new employee with default values
+        const newEmployee = new Employee({
+            employeeId: newEmployeeId,
+            name,
+            email,
+            startDate: startDate || new Date(),
+            status: 'Active',
+            jobRole,
+            ptoUsed: 0
+        });
+
+        await newEmployee.save();
+        const token = jwt.sign({_id: newEmployee._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        res.status(201).json({
+            message: "Employee added successfully",
+            employee: newEmployee,
+            token
+        });
+
+    } catch (error) {
+        console.error("Error adding employee:", error);
+        if (error.code === 11000) {
+            return res.status(400).json({ error: "Email already exists" });
+        }
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const employeeLogin = async (req, res) => {
+    const { employeeId } = req.body;
+    
+    if (!employeeId) {
+        return res.status(400).json({ error: "Employee ID is required" });
+    }
+    
+    const formattedEmployeeId = employeeId.toUpperCase();
+    
+    try {
+        const employee = await Employee.findOne({ employeeId: formattedEmployeeId });
+        if (!employee) {
+            return res.status(400).json({ error: "Invalid employee ID" });
+        }
+
+        const token = jwt.sign({ _id: employee._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        
+        res.json({ 
+            message: "Employee logged in successfully",
+            employee,
+            token 
+        });
+    }
+    catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ error: "An error occurred during login" });
+    }
+};
+
 module.exports = {
     getEmployee,
-    getAllEmployees
+    getAllEmployees,
+    addEmployee,
+    employeeLogin
 };

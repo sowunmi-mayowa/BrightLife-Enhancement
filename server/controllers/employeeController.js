@@ -85,7 +85,7 @@ const addEmployee = async (req, res) => {
             jobRole,
             ptoUsed: 0
         });
-
+        
         await newEmployee.save();
         const token = jwt.sign({_id: newEmployee._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
         res.status(201).json({
@@ -132,9 +132,24 @@ const employeeLogin = async (req, res) => {
     }
 };
 
+const getEmployeebyID = async (req, res) => {
+    const { employeeId } = req.params;
+
+    try {
+        const employee = await Employee.findOne({ employeeId });
+        if (!employee) {
+            return res.status(404).json({ error: "Employee not found" });
+        }
+        res.json(employee);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     getEmployee,
     getAllEmployees,
     addEmployee,
+    getEmployeebyID,
     employeeLogin
 };

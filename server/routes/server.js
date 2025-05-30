@@ -5,6 +5,7 @@ const authMiddleware = require("../middleare/authMiddleware");
 const { createContact, getContacts } = require("../controllers/contactController");
 const { getUsers, addUser, searchByJobRole, searchByName } = require("../controllers/userController");
 const { getEmployee, getAllEmployees, addEmployee, employeeLogin } = require("../controllers/employeeController");
+const { addProcurementRequest, getProcurementRequests } = require("../controllers/procurementController");
 
 const router = express.Router();
 
@@ -25,5 +26,7 @@ router.get('/employee/search', getEmployee);
 router.get('/employees', getAllEmployees);
 router.post('/employee/addEmployee', addEmployee);
 router.post('/employee/login', employeeLogin);
+router.post('/employee/addProcurementRequest', addProcurementRequest);
+router.get('/employee/getprocurements', getProcurementRequests)
 
 module.exports = router
